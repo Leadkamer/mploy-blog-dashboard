@@ -69,6 +69,71 @@
 
   main { padding: 24px; max-width: 1600px; margin: 0 auto; }
 
+  /* METRICS */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .metric-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+  }
+  .metric-card .metric-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .metric-card .metric-value {
+    font-family: 'Outfit', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .metric-card .metric-value.green { color: var(--accent); }
+  .metric-card .metric-value.yellow { color: var(--warn); }
+  .metric-card .metric-value.red { color: var(--danger); }
+  .metric-card .metric-value.blue { color: var(--info); }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    padding: 10px 20px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab .tab-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    background: var(--panel);
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 6px;
+  }
+
   /* LIST VIEW */
   .list-header {
     display: flex;
@@ -107,6 +172,7 @@
   .badge.pending { background: rgba(251, 191, 36, 0.15); color: var(--warn); }
   .badge.approved { background: rgba(52, 211, 153, 0.15); color: var(--accent); }
   .badge.rejected { background: rgba(248, 113, 113, 0.15); color: var(--danger); }
+  .badge.edited { background: rgba(96, 165, 250, 0.15); color: var(--info); }
 
   .empty {
     text-align: center;
@@ -116,6 +182,31 @@
     border-radius: 6px;
   }
   .empty h3 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
+
+  /* HISTORY TABLE */
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .history-table th {
+    text-align: left;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+  .history-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .history-table tr:hover td { background: var(--panel); }
+  .history-table .titel-col { font-weight: 600; color: var(--text); max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .history-table .date-col { color: var(--muted); white-space: nowrap; }
+  .history-clear { margin-top: 16px; }
 
   /* DETAIL VIEW */
   .detail-header {
@@ -276,6 +367,32 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* WATERMARK LOGO */
+  .watermark {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    opacity: 0.25;
+    z-index: 5;
+    transition: opacity 0.2s;
+  }
+  .watermark:hover { opacity: 0.5; }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    header { flex-direction: column; gap: 10px; padding: 12px 16px; }
+    main { padding: 16px; }
+    .metrics { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .metric-card .metric-value { font-size: 22px; }
+    .concept-grid { grid-template-columns: 1fr; }
+    .tabs { overflow-x: auto; }
+    .tab { padding: 8px 14px; font-size: 13px; white-space: nowrap; }
+    .history-table { font-size: 12px; }
+    .history-table th, .history-table td { padding: 8px 10px; }
+    .watermark { bottom: 12px; right: 12px; }
+    .watermark svg { width: 28px; height: 28px; }
+  }
+
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -288,26 +405,53 @@
   </div>
   <div class="toolbar">
     <span class="status" id="status-text">—</span>
-    <button id="refresh-btn">↻ Vernieuwen</button>
-    <button id="config-btn">⚙ Config</button>
+    <button id="refresh-btn">&#8635; Vernieuwen</button>
+    <button id="config-btn">&#9881; Config</button>
   </div>
 </header>
 
 <main>
 
-  <!-- LIST VIEW -->
-  <section id="list-view">
-    <div class="list-header">
-      <h2>Wachtend op goedkeuring</h2>
-      <span class="count" id="list-count"></span>
+  <!-- METRICS -->
+  <div class="metrics" id="metrics">
+    <div class="metric-card">
+      <div class="metric-label">Wachtend</div>
+      <div class="metric-value yellow" id="m-pending">0</div>
     </div>
+    <div class="metric-card">
+      <div class="metric-label">Gepubliceerd</div>
+      <div class="metric-value green" id="m-approved">0</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Afgewezen</div>
+      <div class="metric-value red" id="m-rejected">0</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Herschreven</div>
+      <div class="metric-value blue" id="m-edited">0</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" data-tab="pending">Wachtend<span class="tab-count" id="tab-pending-count">0</span></button>
+    <button class="tab" data-tab="history">Geschiedenis<span class="tab-count" id="tab-history-count">0</span></button>
+  </div>
+
+  <!-- PENDING TAB (LIST VIEW) -->
+  <section id="list-view">
     <div id="concept-list"></div>
+  </section>
+
+  <!-- HISTORY TAB -->
+  <section id="history-view" hidden>
+    <div id="history-list"></div>
   </section>
 
   <!-- DETAIL VIEW -->
   <section id="detail-view" hidden>
     <div class="detail-header">
-      <button id="back-btn">← Terug naar lijst</button>
+      <button id="back-btn">&larr; Terug naar lijst</button>
       <span class="status" id="detail-status"></span>
     </div>
 
@@ -362,13 +506,23 @@
     </div>
 
     <div class="actions">
-      <button id="reject-btn" class="danger">✕ Afwijzen</button>
-      <button id="rewrite-btn">↻ AI Herschrijven</button>
-      <button id="approve-btn" class="primary">✓ Goedkeuren & Publiceren</button>
+      <button id="reject-btn" class="danger">&#10005; Afwijzen</button>
+      <button id="rewrite-btn">&#8635; AI Herschrijven</button>
+      <button id="approve-btn" class="primary">&#10003; Goedkeuren &amp; Publiceren</button>
     </div>
   </section>
 
 </main>
+
+<!-- FORGEXE WATERMARK -->
+<a class="watermark" href="https://forgexe.nl" target="_blank" rel="noopener" title="Powered by Forgexe">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" width="36" height="36">
+    <rect x="25" y="20" width="12" height="80" rx="1" fill="#34d399"/>
+    <rect x="25" y="20" width="55" height="10" rx="1" fill="#34d399"/>
+    <rect x="25" y="52" width="40" height="8" rx="1" fill="#34d399"/>
+    <polygon points="76,52 100,68 76,84" fill="#34d399"/>
+  </svg>
+</a>
 
 <!-- CONFIG MODAL -->
 <div class="modal-overlay" id="config-modal" hidden>
@@ -393,7 +547,7 @@
   </div>
 </div>
 
-<!-- FEEDBACK MODAL (voor wijzigen/afwijzen) -->
+<!-- FEEDBACK MODAL -->
 <div class="modal-overlay" id="feedback-modal" hidden>
   <div class="modal">
     <h3 id="feedback-title">Feedback</h3>
@@ -413,18 +567,78 @@
   'use strict';
 
   var STORAGE_KEY = 'mploy_dashboard_config_v1';
+  var HISTORY_KEY = 'mploy_dashboard_history_v1';
   var config = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  var history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
   var concepts = [];
   var currentConcept = null;
   var pendingAction = null;
+  var activeTab = 'pending';
 
   // ====== ELEMENTEN ======
   var $ = function(id) { return document.getElementById(id); };
   var listView = $('list-view');
+  var historyView = $('history-view');
   var detailView = $('detail-view');
   var listEl = $('concept-list');
-  var countEl = $('list-count');
   var statusEl = $('status-text');
+
+  // ====== HISTORY ======
+  function saveHistory() {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  }
+
+  function addToHistory(action, concept) {
+    history.unshift({
+      action: action,
+      titel: concept.titel || concept.seo_title || '(geen titel)',
+      slug: concept.slug || '',
+      keyphrase: concept.focus_keyphrase || '',
+      date: new Date().toISOString()
+    });
+    if (history.length > 200) history = history.slice(0, 200);
+    saveHistory();
+    updateMetrics();
+    renderHistory();
+  }
+
+  function getHistoryStats() {
+    var stats = { approved: 0, rejected: 0, edited: 0 };
+    history.forEach(function(h) {
+      if (h.action === 'approve') stats.approved++;
+      else if (h.action === 'reject') stats.rejected++;
+      else if (h.action === 'edit') stats.edited++;
+    });
+    return stats;
+  }
+
+  // ====== METRICS ======
+  function updateMetrics() {
+    var stats = getHistoryStats();
+    $('m-pending').textContent = concepts.length;
+    $('m-approved').textContent = stats.approved;
+    $('m-rejected').textContent = stats.rejected;
+    $('m-edited').textContent = stats.edited;
+    $('tab-pending-count').textContent = concepts.length;
+    $('tab-history-count').textContent = history.length;
+  }
+
+  // ====== TABS ======
+  function switchTab(tab) {
+    activeTab = tab;
+    document.querySelectorAll('.tab').forEach(function(t) {
+      t.classList.toggle('active', t.getAttribute('data-tab') === tab);
+    });
+    listView.hidden = tab !== 'pending';
+    historyView.hidden = tab !== 'history';
+    detailView.hidden = true;
+  }
+
+  document.querySelectorAll('.tab').forEach(function(t) {
+    t.addEventListener('click', function() {
+      switchTab(t.getAttribute('data-tab'));
+    });
+  });
 
   // ====== API ======
   async function fetchConcepts() {
@@ -438,9 +652,9 @@
       if (!res.ok) throw new Error('HTTP ' + res.status);
       var text = await res.text();
       var data = text ? JSON.parse(text) : [];
-      // n8n kan een array teruggeven of {data: [...]}
       concepts = Array.isArray(data) ? data : (data.data || data.concepten || []);
       renderList();
+      updateMetrics();
       setStatus(concepts.length + ' concept(en) geladen');
     } catch (err) {
       setStatus('Fout bij laden', true);
@@ -451,7 +665,7 @@
   async function sendAction(action, payload) {
     if (!currentConcept) return false;
     if (!config.publishUrl) {
-      toast('Publish URL niet ingesteld (⚙ Config)', true);
+      toast('Publish URL niet ingesteld (Config)', true);
       return false;
     }
     setStatus('Versturen...');
@@ -482,7 +696,6 @@
   // ====== LIST RENDER ======
   function renderList() {
     listEl.innerHTML = '';
-    countEl.textContent = concepts.length + (concepts.length === 1 ? ' concept' : ' concepten');
 
     if (concepts.length === 0) {
       listEl.innerHTML = '<div class="empty"><h3>Geen wachtende concepten</h3><p>Zodra n8n een nieuwe blog genereert verschijnt deze hier.</p></div>';
@@ -511,11 +724,62 @@
     listEl.appendChild(grid);
   }
 
+  // ====== HISTORY RENDER ======
+  function renderHistory() {
+    var el = $('history-list');
+    el.innerHTML = '';
+
+    if (history.length === 0) {
+      el.innerHTML = '<div class="empty"><h3>Nog geen geschiedenis</h3><p>Goedgekeurde, afgewezen en herschreven blogs verschijnen hier.</p></div>';
+      return;
+    }
+
+    var table = document.createElement('table');
+    table.className = 'history-table';
+    table.innerHTML = '<thead><tr>'
+      + '<th>Status</th>'
+      + '<th>Titel</th>'
+      + '<th>Keyphrase</th>'
+      + '<th>Datum</th>'
+      + '</tr></thead>';
+
+    var tbody = document.createElement('tbody');
+
+    history.forEach(function(h) {
+      var tr = document.createElement('tr');
+      var badgeClass = h.action === 'approve' ? 'approved' : h.action === 'reject' ? 'rejected' : 'edited';
+      var badgeLabel = h.action === 'approve' ? 'Gepubliceerd' : h.action === 'reject' ? 'Afgewezen' : 'Herschreven';
+      tr.innerHTML = ''
+        + '<td><span class="badge ' + badgeClass + '">' + badgeLabel + '</span></td>'
+        + '<td class="titel-col"></td>'
+        + '<td style="color: var(--muted)"></td>'
+        + '<td class="date-col">' + formatDate(h.date) + '</td>';
+      tr.querySelectorAll('td')[1].textContent = h.titel;
+      tr.querySelectorAll('td')[2].textContent = h.keyphrase || '—';
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    el.appendChild(table);
+
+    var clearBtn = document.createElement('button');
+    clearBtn.className = 'history-clear danger';
+    clearBtn.textContent = 'Geschiedenis wissen';
+    clearBtn.addEventListener('click', function() {
+      if (!confirm('Hele geschiedenis wissen?')) return;
+      history = [];
+      saveHistory();
+      updateMetrics();
+      renderHistory();
+    });
+    el.appendChild(clearBtn);
+  }
+
   function formatDate(s) {
     if (!s) return '';
     try {
       var d = new Date(s);
-      return d.toLocaleDateString('nl-NL', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+      return d.toLocaleDateString('nl-NL', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     } catch(e) { return s; }
   }
 
@@ -523,7 +787,9 @@
   function openDetail(concept) {
     currentConcept = concept;
     listView.hidden = true;
+    historyView.hidden = true;
     detailView.hidden = false;
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
     window.scrollTo(0, 0);
 
     $('f-titel').value = concept.titel || '';
@@ -558,7 +824,7 @@
     var wrap = document.createElement('div');
     wrap.className = 'faq-item';
     wrap.innerHTML = ''
-      + '<button class="remove-faq danger">✕</button>'
+      + '<button class="remove-faq danger">&#10005;</button>'
       + '<input type="text" placeholder="Vraag" value="">'
       + '<textarea placeholder="Antwoord"></textarea>';
     wrap.querySelector('input').value = vraag;
@@ -623,8 +889,7 @@
 
   function backToList() {
     detailView.hidden = true;
-    listView.hidden = false;
-    currentConcept = null;
+    switchTab(activeTab || 'pending');
   }
 
   // ====== ACTIONS ======
@@ -633,10 +898,12 @@
     var data = collectEditedData();
     var ok = await sendAction('approve', data);
     if (ok) {
-      toast('✓ Goedgekeurd — publicatie gestart');
+      toast('Goedgekeurd — publicatie gestart');
+      addToHistory('approve', Object.assign({}, currentConcept, data));
       concepts = concepts.filter(function(c) { return c.id !== currentConcept.id; });
       backToList();
       renderList();
+      updateMetrics();
     }
   }
 
@@ -645,9 +912,11 @@
       var ok = await sendAction('reject', { feedback: feedback });
       if (ok) {
         toast('Afgewezen');
+        addToHistory('reject', currentConcept);
         concepts = concepts.filter(function(c) { return c.id !== currentConcept.id; });
         backToList();
         renderList();
+        updateMetrics();
       }
     });
   }
@@ -659,9 +928,11 @@
       var ok = await sendAction('edit', data);
       if (ok) {
         toast('AI herschrijft... refresh over ~30s');
+        addToHistory('edit', Object.assign({}, currentConcept, data));
         concepts = concepts.filter(function(c) { return c.id !== currentConcept.id; });
         backToList();
         renderList();
+        updateMetrics();
       }
     });
   }
@@ -730,6 +1001,8 @@
   });
 
   // ====== INIT ======
+  updateMetrics();
+  renderHistory();
   if (!config.listUrl) {
     showConfig();
   } else {
