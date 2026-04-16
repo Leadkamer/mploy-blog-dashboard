@@ -497,6 +497,13 @@
     .watermark svg { width: 28px; height: 28px; }
   }
 
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  * { scrollbar-width: thin; scrollbar-color: var(--border) var(--bg); }
+
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -1214,6 +1221,11 @@
       + 'ul, ol { margin: 0 0 14px 24px; }'
       + 'li { margin-bottom: 6px; }'
       + 'strong { color: ' + headColor + '; }'
+      + '::-webkit-scrollbar { width: 6px; }'
+      + '::-webkit-scrollbar-track { background: ' + bgColor + '; }'
+      + '::-webkit-scrollbar-thumb { background: ' + (isLight ? '#c0c8d0' : '#1e2832') + '; border-radius: 3px; }'
+      + '::-webkit-scrollbar-thumb:hover { background: ' + (isLight ? '#a0a8b0' : '#3a4858') + '; }'
+      + '* { scrollbar-width: thin; scrollbar-color: ' + (isLight ? '#c0c8d0 #ffffff' : '#1e2832 #0a0e13') + '; }'
       + '</style></head><body>'
       + '<h1>' + escapeHtml(titel) + '</h1>'
       + html
