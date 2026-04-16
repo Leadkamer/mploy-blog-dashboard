@@ -744,6 +744,7 @@
     document.body.classList.toggle('light');
     localStorage.setItem(THEME_KEY, document.body.classList.contains('light') ? 'light' : 'dark');
     updateThemeBtn();
+    if (!detailView.hidden) updatePreview();
   }
   function updateThemeBtn() {
     $('theme-btn').innerHTML = document.body.classList.contains('light') ? '&#9728;' : '&#9790;';
