@@ -1197,9 +1197,10 @@
     var doc = $('preview').contentDocument;
     var html = $('html-editor').value || '';
     var titel = $('f-titel').value || '';
-    var bgColor = document.body.classList.contains('light') ? '#fff' : '#0a0e13';
-    var textColor = document.body.classList.contains('light') ? '#1a2332' : '#e8ecf1';
-    var headColor = document.body.classList.contains('light') ? '#111' : '#fff';
+    var isLight = document.body.classList.contains('light');
+    var bgColor = isLight ? '#ffffff' : '#0a0e13';
+    var textColor = isLight ? '#222222' : '#e8ecf1';
+    var headColor = isLight ? '#000000' : '#ffffff';
     doc.open();
     doc.write(
       '<html><head><style>'
