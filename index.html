@@ -20,6 +20,20 @@
     --warn: #fbbf24;
     --info: #60a5fa;
   }
+  body.light {
+    --bg: #f5f7fa;
+    --panel: #ffffff;
+    --panel-2: #edf0f4;
+    --border: #d1d9e0;
+    --text: #1a2332;
+    --muted: #6b7a8a;
+    --accent: #059669;
+    --accent-hover: #34d399;
+    --accent-deep: #047857;
+    --danger: #dc2626;
+    --warn: #d97706;
+    --info: #2563eb;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; }
   body {
@@ -29,6 +43,7 @@
     font-size: 13px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    transition: background 0.2s, color 0.2s;
   }
   h1, h2, h3 { font-family: 'Outfit', sans-serif; font-weight: 700; }
 
@@ -46,7 +61,7 @@
   header h1 { font-size: 20px; color: var(--accent); letter-spacing: -0.5px; }
   header .brand { display: flex; align-items: center; gap: 12px; }
   header .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
-  .toolbar { display: flex; gap: 8px; align-items: center; }
+  .toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .toolbar .status { font-size: 11px; color: var(--muted); }
 
   button, .btn {
@@ -61,11 +76,13 @@
     transition: all 0.15s;
   }
   button:hover, .btn:hover { border-color: var(--accent); color: var(--accent); }
-  button.primary { background: var(--accent); color: #0a0e13; border-color: var(--accent); font-weight: 700; }
-  button.primary:hover { background: var(--accent-hover); color: #0a0e13; }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 700; }
+  body.light button.primary { color: #fff; }
+  button.primary:hover { background: var(--accent-hover); }
   button.danger { border-color: var(--danger); color: var(--danger); }
-  button.danger:hover { background: var(--danger); color: #0a0e13; }
+  button.danger:hover { background: var(--danger); color: #fff; }
   button:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.icon-btn { padding: 8px 10px; font-size: 14px; line-height: 1; }
 
   main { padding: 24px; max-width: 1600px; margin: 0 auto; }
 
@@ -93,7 +110,6 @@
     font-family: 'Outfit', sans-serif;
     font-size: 28px;
     font-weight: 800;
-    color: var(--text);
   }
   .metric-card .metric-value.green { color: var(--accent); }
   .metric-card .metric-value.yellow { color: var(--warn); }
@@ -135,15 +151,6 @@
   }
 
   /* LIST VIEW */
-  .list-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  .list-header h2 { font-size: 22px; }
-  .list-header .count { color: var(--muted); font-size: 12px; }
-
   .concept-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -161,7 +168,7 @@
   .concept-card .titel { font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
   .concept-card .meta { display: flex; gap: 10px; font-size: 11px; color: var(--muted); margin-bottom: 10px; flex-wrap: wrap; }
   .concept-card .samenvatting { font-size: 12px; color: var(--muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .concept-card .badge {
+  .badge {
     display: inline-block;
     padding: 2px 8px;
     border-radius: 10px;
@@ -184,6 +191,7 @@
   .empty h3 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
 
   /* HISTORY TABLE */
+  .history-actions { display: flex; gap: 8px; margin-bottom: 16px; }
   .history-table {
     width: 100%;
     border-collapse: collapse;
@@ -206,7 +214,6 @@
   .history-table tr:hover td { background: var(--panel); }
   .history-table .titel-col { font-weight: 600; color: var(--text); max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .history-table .date-col { color: var(--muted); white-space: nowrap; }
-  .history-clear { margin-top: 16px; }
 
   /* DETAIL VIEW */
   .detail-header {
@@ -248,6 +255,97 @@
   }
   .field textarea { min-height: 80px; }
   #html-editor { min-height: 500px; font-size: 12px; line-height: 1.6; }
+
+  /* SEO COUNTER BAR */
+  .seo-counter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .seo-bar {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+    position: relative;
+  }
+  .seo-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease, background 0.3s;
+    box-shadow: 0 0 6px rgba(52, 211, 153, 0.3);
+  }
+  .seo-bar-fill.warn { background: var(--warn); box-shadow: 0 0 6px rgba(251, 191, 36, 0.4); }
+  .seo-bar-fill.good { background: var(--accent); box-shadow: 0 0 8px rgba(52, 211, 153, 0.5); }
+  .seo-bar-fill.danger { background: var(--danger); box-shadow: 0 0 6px rgba(248, 113, 113, 0.4); }
+  .seo-bar-fill.empty { background: var(--border); box-shadow: none; }
+  .seo-label {
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    min-width: 110px;
+    text-align: right;
+  }
+  .seo-label.warn { color: var(--warn); }
+  .seo-label.danger { color: var(--danger); }
+  .seo-label.good { color: var(--accent); }
+  .seo-label.muted { color: var(--muted); }
+
+  /* SLUG PREVIEW */
+  .slug-preview {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    word-break: break-all;
+  }
+  .slug-preview span { color: var(--accent); }
+
+  /* WORD COUNT + KEYPHRASE CHECK */
+  .editor-stats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .editor-stats .stat { display: flex; align-items: center; gap: 4px; }
+  .editor-stats .stat.good { color: var(--accent); }
+  .editor-stats .stat.warn { color: var(--warn); }
+  .editor-stats .stat.bad { color: var(--danger); }
+
+  /* KEYPHRASE CHECKLIST */
+  .kp-checks {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .kp-check {
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .kp-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .kp-dot.pass { background: var(--accent); }
+  .kp-dot.fail { background: var(--danger); }
+
+  /* DUPLICATE WARNING */
+  .dup-warn {
+    font-size: 11px;
+    color: var(--warn);
+    margin-top: 4px;
+    display: none;
+  }
+  .dup-warn.visible { display: block; }
 
   .panel {
     background: var(--panel);
@@ -291,15 +389,8 @@
     outline: none;
     border-color: var(--accent);
   }
-  .faq-item input {
-    font-weight: 600;
-    padding-right: 40px;
-  }
-  .faq-item textarea {
-    min-height: 70px;
-    resize: vertical;
-    line-height: 1.5;
-  }
+  .faq-item input { font-weight: 600; padding-right: 40px; }
+  .faq-item textarea { min-height: 70px; resize: vertical; line-height: 1.5; }
   .faq-item .remove-faq {
     position: absolute;
     top: 14px;
@@ -340,6 +431,30 @@
   .modal .field { margin-bottom: 14px; }
   .modal .actions { position: static; background: none; border: none; margin: 16px 0 0 0; padding: 0; }
 
+  /* PIN LOCK */
+  .pin-screen {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    z-index: 999;
+  }
+  .pin-screen h2 { font-size: 20px; color: var(--accent); margin-bottom: 20px; }
+  .pin-screen input {
+    width: 200px;
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 8px;
+    padding: 12px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    font-family: inherit;
+  }
+  .pin-screen input:focus { outline: none; border-color: var(--accent); }
+  .pin-screen .pin-error { color: var(--danger); font-size: 12px; margin-top: 10px; min-height: 18px; }
+  .pin-screen .pin-hint { color: var(--muted); font-size: 11px; margin-top: 16px; }
+
   .toast {
     position: fixed;
     bottom: 24px;
@@ -355,17 +470,6 @@
   }
   .toast.error { border-color: var(--danger); color: var(--danger); }
   @keyframes slideUp { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
-
-  .loader {
-    display: inline-block;
-    width: 14px; height: 14px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    vertical-align: middle;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
 
   /* WATERMARK LOGO */
   .watermark {
@@ -398,14 +502,23 @@
 </head>
 <body>
 
+<!-- PIN LOCK SCREEN -->
+<div class="pin-screen" id="pin-screen" hidden>
+  <h2>Mploy Dashboard</h2>
+  <input type="password" id="pin-input" maxlength="6" placeholder="----" autocomplete="off">
+  <div class="pin-error" id="pin-error"></div>
+  <div class="pin-hint">Voer je PIN in om door te gaan</div>
+</div>
+
 <header>
   <div class="brand">
     <div class="dot"></div>
     <h1>Mploy Blog Dashboard</h1>
   </div>
   <div class="toolbar">
-    <span class="status" id="status-text">—</span>
+    <span class="status" id="status-text">--</span>
     <button id="refresh-btn">&#8635; Vernieuwen</button>
+    <button id="theme-btn" class="icon-btn" title="Dark/light toggle">&#9790;</button>
     <button id="config-btn">&#9881; Config</button>
   </div>
 </header>
@@ -413,7 +526,7 @@
 <main>
 
   <!-- METRICS -->
-  <div class="metrics" id="metrics">
+  <div class="metrics">
     <div class="metric-card">
       <div class="metric-label">Wachtend</div>
       <div class="metric-value yellow" id="m-pending">0</div>
@@ -438,7 +551,7 @@
     <button class="tab" data-tab="history">Geschiedenis<span class="tab-count" id="tab-history-count">0</span></button>
   </div>
 
-  <!-- PENDING TAB (LIST VIEW) -->
+  <!-- PENDING TAB -->
   <section id="list-view">
     <div id="concept-list"></div>
   </section>
@@ -456,29 +569,40 @@
     </div>
 
     <div class="detail-grid">
-
       <div>
         <div class="panel">
           <h3>Metadata</h3>
           <div class="field">
             <label>Titel (H1)</label>
             <input type="text" id="f-titel">
+            <div class="dup-warn" id="dup-titel">Titel komt al voor in geschiedenis</div>
           </div>
           <div class="field">
             <label>SEO Title (max 60 tekens)</label>
             <input type="text" id="f-seo-title" maxlength="80">
+            <div class="seo-counter">
+              <div class="seo-bar"><div class="seo-bar-fill" id="seo-title-bar"></div></div>
+              <span class="seo-label muted" id="seo-title-hint"></span>
+            </div>
           </div>
           <div class="field">
             <label>Slug</label>
             <input type="text" id="f-slug">
+            <div class="slug-preview" id="slug-preview">mploy.nu/blog/<span></span></div>
+            <div class="dup-warn" id="dup-slug">Slug komt al voor in geschiedenis</div>
           </div>
           <div class="field">
-            <label>Samenvatting / Meta Description</label>
+            <label>Samenvatting / Meta Description (max 160 tekens)</label>
             <textarea id="f-samenvatting"></textarea>
+            <div class="seo-counter">
+              <div class="seo-bar"><div class="seo-bar-fill" id="seo-desc-bar"></div></div>
+              <span class="seo-label muted" id="seo-desc-hint"></span>
+            </div>
           </div>
           <div class="field">
             <label>Focus Keyphrase</label>
             <input type="text" id="f-keyphrase" readonly>
+            <div class="kp-checks" id="kp-checks"></div>
           </div>
         </div>
 
@@ -486,6 +610,7 @@
           <h3>Blog HTML</h3>
           <div class="field">
             <textarea id="html-editor" spellcheck="false"></textarea>
+            <div class="editor-stats" id="editor-stats"></div>
           </div>
         </div>
 
@@ -502,7 +627,6 @@
           <iframe id="preview" class="preview-frame"></iframe>
         </div>
       </div>
-
     </div>
 
     <div class="actions">
@@ -536,9 +660,14 @@
       <label>Publish URL (POST actie)</label>
       <input type="text" id="cfg-publish-url" placeholder="https://leadkamer.app.n8n.cloud/webhook/mploy-publish">
     </div>
+    <div class="field">
+      <label>PIN-code (optioneel, min 4 tekens)</label>
+      <input type="text" id="cfg-pin" placeholder="Laat leeg om PIN uit te schakelen" autocomplete="off">
+    </div>
     <p style="font-size: 11px; color: var(--muted); margin-bottom: 10px;">
-      Lijst URL: haalt wachtende concepten op uit de Concepten sheet.<br>
-      Publish URL: ontvangt goedkeuring/afwijzing en publiceert naar WordPress.
+      Lijst URL: haalt wachtende concepten op.<br>
+      Publish URL: ontvangt goedkeuring/afwijzing.<br>
+      PIN: beschermt toegang tot het dashboard.
     </p>
     <div class="actions">
       <button id="cfg-cancel">Annuleren</button>
@@ -568,20 +697,75 @@
 
   var STORAGE_KEY = 'mploy_dashboard_config_v1';
   var HISTORY_KEY = 'mploy_dashboard_history_v1';
+  var THEME_KEY = 'mploy_dashboard_theme';
   var config = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
   var history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
   var concepts = [];
   var currentConcept = null;
   var pendingAction = null;
   var activeTab = 'pending';
+  var autoRefreshTimer = null;
+  var lastConceptCount = -1;
 
-  // ====== ELEMENTEN ======
   var $ = function(id) { return document.getElementById(id); };
   var listView = $('list-view');
   var historyView = $('history-view');
   var detailView = $('detail-view');
   var listEl = $('concept-list');
   var statusEl = $('status-text');
+
+  // ====== PIN LOCK ======
+  function checkPin() {
+    if (!config.pin) return;
+    var pinScreen = $('pin-screen');
+    var pinInput = $('pin-input');
+    pinScreen.hidden = false;
+    pinInput.focus();
+    pinInput.addEventListener('input', function() {
+      $('pin-error').textContent = '';
+      if (pinInput.value.length >= config.pin.length) {
+        if (pinInput.value === config.pin) {
+          pinScreen.hidden = true;
+        } else {
+          $('pin-error').textContent = 'Onjuiste PIN';
+          pinInput.value = '';
+        }
+      }
+    });
+  }
+
+  // ====== THEME ======
+  function initTheme() {
+    var saved = localStorage.getItem(THEME_KEY);
+    if (saved === 'light') document.body.classList.add('light');
+    updateThemeBtn();
+  }
+  function toggleTheme() {
+    document.body.classList.toggle('light');
+    localStorage.setItem(THEME_KEY, document.body.classList.contains('light') ? 'light' : 'dark');
+    updateThemeBtn();
+  }
+  function updateThemeBtn() {
+    $('theme-btn').innerHTML = document.body.classList.contains('light') ? '&#9728;' : '&#9790;';
+  }
+
+  // ====== NOTIFICATION SOUND ======
+  function playNotifSound() {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.3);
+    } catch(e) {}
+  }
 
   // ====== HISTORY ======
   function saveHistory() {
@@ -612,6 +796,23 @@
     return stats;
   }
 
+  function exportCSV() {
+    var rows = [['Status', 'Titel', 'Slug', 'Keyphrase', 'Datum']];
+    history.forEach(function(h) {
+      var label = h.action === 'approve' ? 'Gepubliceerd' : h.action === 'reject' ? 'Afgewezen' : 'Herschreven';
+      rows.push([label, h.titel, h.slug, h.keyphrase, h.date]);
+    });
+    var csv = rows.map(function(r) {
+      return r.map(function(c) { return '"' + String(c || '').replace(/"/g, '""') + '"'; }).join(',');
+    }).join('\n');
+    var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'mploy-blog-geschiedenis.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
   // ====== METRICS ======
   function updateMetrics() {
     var stats = getHistoryStats();
@@ -640,25 +841,54 @@
     });
   });
 
+  // ====== AUTO-REFRESH ======
+  function startAutoRefresh() {
+    if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+    autoRefreshTimer = setInterval(function() {
+      if (!detailView.hidden) return;
+      fetchConcepts(true);
+    }, 60000);
+  }
+
+  function formatTimeAgo(date) {
+    var diff = Math.floor((Date.now() - date.getTime()) / 1000);
+    if (diff < 60) return 'zojuist';
+    if (diff < 3600) return Math.floor(diff / 60) + ' min geleden';
+    return Math.floor(diff / 3600) + ' uur geleden';
+  }
+
   // ====== API ======
-  async function fetchConcepts() {
+  var lastFetchTime = null;
+
+  async function fetchConcepts(silent) {
     if (!config.listUrl) {
       showConfig();
       return;
     }
-    setStatus('Laden...');
+    if (!silent) setStatus('Laden...');
     try {
       var res = await fetch(config.listUrl, { cache: 'no-store' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       var text = await res.text();
       var data = text ? JSON.parse(text) : [];
-      concepts = Array.isArray(data) ? data : (data.data || data.concepten || []);
+      var newConcepts = Array.isArray(data) ? data : (data.data || data.concepten || []);
+
+      if (lastConceptCount >= 0 && newConcepts.length > lastConceptCount) {
+        playNotifSound();
+        toast('Nieuw concept ontvangen!');
+      }
+      lastConceptCount = newConcepts.length;
+      concepts = newConcepts;
+      lastFetchTime = new Date();
+
       renderList();
       updateMetrics();
-      setStatus(concepts.length + ' concept(en) geladen');
+      setStatus(concepts.length + ' concept(en) — ' + formatTimeAgo(lastFetchTime));
     } catch (err) {
-      setStatus('Fout bij laden', true);
-      toast('Kon concepten niet laden: ' + err.message, true);
+      if (!silent) {
+        setStatus('Fout bij laden', true);
+        toast('Kon concepten niet laden: ' + err.message, true);
+      }
     }
   }
 
@@ -696,15 +926,12 @@
   // ====== LIST RENDER ======
   function renderList() {
     listEl.innerHTML = '';
-
     if (concepts.length === 0) {
       listEl.innerHTML = '<div class="empty"><h3>Geen wachtende concepten</h3><p>Zodra n8n een nieuwe blog genereert verschijnt deze hier.</p></div>';
       return;
     }
-
     var grid = document.createElement('div');
     grid.className = 'concept-grid';
-
     concepts.forEach(function(c) {
       var card = document.createElement('div');
       card.className = 'concept-card';
@@ -720,7 +947,6 @@
       card.addEventListener('click', function() { openDetail(c); });
       grid.appendChild(card);
     });
-
     listEl.appendChild(grid);
   }
 
@@ -728,23 +954,34 @@
   function renderHistory() {
     var el = $('history-list');
     el.innerHTML = '';
-
     if (history.length === 0) {
       el.innerHTML = '<div class="empty"><h3>Nog geen geschiedenis</h3><p>Goedgekeurde, afgewezen en herschreven blogs verschijnen hier.</p></div>';
       return;
     }
 
+    var actionsDiv = document.createElement('div');
+    actionsDiv.className = 'history-actions';
+    var exportBtn = document.createElement('button');
+    exportBtn.textContent = 'Exporteer CSV';
+    exportBtn.addEventListener('click', exportCSV);
+    var clearBtn = document.createElement('button');
+    clearBtn.className = 'danger';
+    clearBtn.textContent = 'Geschiedenis wissen';
+    clearBtn.addEventListener('click', function() {
+      if (!confirm('Hele geschiedenis wissen?')) return;
+      history = [];
+      saveHistory();
+      updateMetrics();
+      renderHistory();
+    });
+    actionsDiv.appendChild(exportBtn);
+    actionsDiv.appendChild(clearBtn);
+    el.appendChild(actionsDiv);
+
     var table = document.createElement('table');
     table.className = 'history-table';
-    table.innerHTML = '<thead><tr>'
-      + '<th>Status</th>'
-      + '<th>Titel</th>'
-      + '<th>Keyphrase</th>'
-      + '<th>Datum</th>'
-      + '</tr></thead>';
-
+    table.innerHTML = '<thead><tr><th>Status</th><th>Titel</th><th>Keyphrase</th><th>Datum</th></tr></thead>';
     var tbody = document.createElement('tbody');
-
     history.forEach(function(h) {
       var tr = document.createElement('tr');
       var badgeClass = h.action === 'approve' ? 'approved' : h.action === 'reject' ? 'rejected' : 'edited';
@@ -755,24 +992,11 @@
         + '<td style="color: var(--muted)"></td>'
         + '<td class="date-col">' + formatDate(h.date) + '</td>';
       tr.querySelectorAll('td')[1].textContent = h.titel;
-      tr.querySelectorAll('td')[2].textContent = h.keyphrase || '—';
+      tr.querySelectorAll('td')[2].textContent = h.keyphrase || '--';
       tbody.appendChild(tr);
     });
-
     table.appendChild(tbody);
     el.appendChild(table);
-
-    var clearBtn = document.createElement('button');
-    clearBtn.className = 'history-clear danger';
-    clearBtn.textContent = 'Geschiedenis wissen';
-    clearBtn.addEventListener('click', function() {
-      if (!confirm('Hele geschiedenis wissen?')) return;
-      history = [];
-      saveHistory();
-      updateMetrics();
-      renderHistory();
-    });
-    el.appendChild(clearBtn);
   }
 
   function formatDate(s) {
@@ -781,6 +1005,115 @@
       var d = new Date(s);
       return d.toLocaleDateString('nl-NL', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     } catch(e) { return s; }
+  }
+
+  // ====== SEO COUNTERS ======
+  function updateSeoCounters() {
+    var titleLen = ($('f-seo-title').value || '').length;
+    var descLen = ($('f-samenvatting').value || '').length;
+
+    setSeoBar('seo-title-bar', 'seo-title-hint', titleLen, 30, 60, 'tekens');
+    setSeoBar('seo-desc-bar', 'seo-desc-hint', descLen, 120, 160, 'tekens');
+  }
+
+  function setSeoBar(barId, hintId, len, ideal, max, unit) {
+    var pct = Math.min(len / max * 100, 100);
+    var bar = $(barId);
+    var hint = $(hintId);
+    bar.style.width = pct + '%';
+    bar.className = 'seo-bar-fill';
+
+    if (len === 0) {
+      bar.classList.add('empty');
+      hint.textContent = '0/' + max;
+      hint.className = 'seo-label muted';
+    } else if (len < ideal) {
+      bar.classList.add('warn');
+      hint.textContent = len + '/' + max + ' — te kort';
+      hint.className = 'seo-label warn';
+    } else if (len <= max) {
+      bar.classList.add('good');
+      hint.textContent = len + '/' + max + ' — goed';
+      hint.className = 'seo-label good';
+    } else {
+      bar.classList.add('danger');
+      hint.textContent = len + '/' + max + ' — te lang';
+      hint.className = 'seo-label danger';
+    }
+  }
+
+  // ====== SLUG PREVIEW ======
+  function updateSlugPreview() {
+    var slug = $('f-slug').value || '';
+    $('slug-preview').querySelector('span').textContent = slug || '...';
+  }
+
+  // ====== WORD COUNT ======
+  function countWords(html) {
+    var tmp = document.createElement('div');
+    tmp.innerHTML = html || '';
+    var text = tmp.textContent || tmp.innerText || '';
+    var words = text.trim().split(/\s+/).filter(function(w) { return w.length > 0; });
+    return words.length;
+  }
+
+  function updateEditorStats() {
+    var html = $('html-editor').value || '';
+    var words = countWords(html);
+    var statsEl = $('editor-stats');
+    var wordClass = words >= 1200 ? 'good' : words >= 800 ? 'warn' : 'bad';
+    var wordLabel = words >= 1200 ? 'uitstekend' : words >= 800 ? 'minimaal' : 'te kort';
+
+    statsEl.innerHTML = '<span class="stat ' + wordClass + '">' + words + ' woorden (' + wordLabel + ')</span>';
+  }
+
+  // ====== KEYPHRASE CHECK ======
+  function updateKeyphraseChecks() {
+    var kp = ($('f-keyphrase').value || '').toLowerCase().trim();
+    var checksEl = $('kp-checks');
+    if (!kp) { checksEl.innerHTML = ''; return; }
+
+    var titel = ($('f-titel').value || '').toLowerCase();
+    var samenvatting = ($('f-samenvatting').value || '').toLowerCase();
+    var seoTitle = ($('f-seo-title').value || '').toLowerCase();
+    var html = ($('html-editor').value || '').toLowerCase();
+
+    var firstP = '';
+    var match = html.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+    if (match) {
+      var tmp = document.createElement('div');
+      tmp.innerHTML = match[1];
+      firstP = (tmp.textContent || '').toLowerCase();
+    }
+
+    var checks = [
+      { label: 'In titel (H1)', pass: titel.indexOf(kp) !== -1 },
+      { label: 'In SEO title', pass: seoTitle.indexOf(kp) !== -1 },
+      { label: 'In meta description', pass: samenvatting.indexOf(kp) !== -1 },
+      { label: 'In eerste alinea', pass: firstP.indexOf(kp) !== -1 }
+    ];
+
+    checksEl.innerHTML = checks.map(function(c) {
+      return '<div class="kp-check"><span class="kp-dot ' + (c.pass ? 'pass' : 'fail') + '"></span>' + c.label + '</div>';
+    }).join('');
+  }
+
+  // ====== DUPLICATE CHECK ======
+  function checkDuplicates() {
+    var titel = ($('f-titel').value || '').toLowerCase().trim();
+    var slug = ($('f-slug').value || '').toLowerCase().trim();
+    var dupTitel = $('dup-titel');
+    var dupSlug = $('dup-slug');
+
+    var titelDup = titel && history.some(function(h) {
+      return (h.titel || '').toLowerCase().trim() === titel && h.action === 'approve';
+    });
+    var slugDup = slug && history.some(function(h) {
+      return (h.slug || '').toLowerCase().trim() === slug && h.action === 'approve';
+    });
+
+    dupTitel.classList.toggle('visible', titelDup);
+    dupSlug.classList.toggle('visible', slugDup);
   }
 
   // ====== DETAIL VIEW ======
@@ -803,6 +1136,11 @@
     renderFaqs(faqs);
 
     updatePreview();
+    updateSeoCounters();
+    updateSlugPreview();
+    updateEditorStats();
+    updateKeyphraseChecks();
+    checkDuplicates();
     $('detail-status').textContent = 'Status: ' + (concept.status || 'pending');
   }
 
@@ -829,9 +1167,7 @@
       + '<textarea placeholder="Antwoord"></textarea>';
     wrap.querySelector('input').value = vraag;
     wrap.querySelector('textarea').value = antwoord;
-    wrap.querySelector('.remove-faq').addEventListener('click', function() {
-      wrap.remove();
-    });
+    wrap.querySelector('.remove-faq').addEventListener('click', function() { wrap.remove(); });
     return wrap;
   }
 
@@ -861,18 +1197,21 @@
     var doc = $('preview').contentDocument;
     var html = $('html-editor').value || '';
     var titel = $('f-titel').value || '';
+    var bgColor = document.body.classList.contains('light') ? '#fff' : '#0a0e13';
+    var textColor = document.body.classList.contains('light') ? '#1a2332' : '#e8ecf1';
+    var headColor = document.body.classList.contains('light') ? '#111' : '#fff';
     doc.open();
     doc.write(
       '<html><head><style>'
-      + 'body { font-family: -apple-system, Segoe UI, sans-serif; padding: 24px; background: #0a0e13; color: #e8ecf1; line-height: 1.6; max-width: 720px; }'
-      + 'h1 { font-size: 28px; margin-bottom: 16px; color: #fff; }'
-      + 'h2 { font-size: 22px; margin: 24px 0 10px; color: #fff; }'
-      + 'h3 { font-size: 18px; margin: 18px 0 8px; color: #fff; }'
-      + 'p { margin-bottom: 14px; color: #e8ecf1; }'
+      + 'body { font-family: -apple-system, Segoe UI, sans-serif; padding: 24px; background: ' + bgColor + '; color: ' + textColor + '; line-height: 1.6; max-width: 720px; }'
+      + 'h1 { font-size: 28px; margin-bottom: 16px; color: ' + headColor + '; }'
+      + 'h2 { font-size: 22px; margin: 24px 0 10px; color: ' + headColor + '; }'
+      + 'h3 { font-size: 18px; margin: 18px 0 8px; color: ' + headColor + '; }'
+      + 'p { margin-bottom: 14px; }'
       + 'a { color: #34d399; }'
-      + 'ul, ol { margin: 0 0 14px 24px; color: #e8ecf1; }'
+      + 'ul, ol { margin: 0 0 14px 24px; }'
       + 'li { margin-bottom: 6px; }'
-      + 'strong { color: #fff; }'
+      + 'strong { color: ' + headColor + '; }'
       + '</style></head><body>'
       + '<h1>' + escapeHtml(titel) + '</h1>'
       + html
@@ -901,6 +1240,7 @@
       toast('Goedgekeurd — publicatie gestart');
       addToHistory('approve', Object.assign({}, currentConcept, data));
       concepts = concepts.filter(function(c) { return c.id !== currentConcept.id; });
+      lastConceptCount = concepts.length;
       backToList();
       renderList();
       updateMetrics();
@@ -914,6 +1254,7 @@
         toast('Afgewezen');
         addToHistory('reject', currentConcept);
         concepts = concepts.filter(function(c) { return c.id !== currentConcept.id; });
+        lastConceptCount = concepts.length;
         backToList();
         renderList();
         updateMetrics();
@@ -930,6 +1271,7 @@
         toast('AI herschrijft... refresh over ~30s');
         addToHistory('edit', Object.assign({}, currentConcept, data));
         concepts = concepts.filter(function(c) { return c.id !== currentConcept.id; });
+        lastConceptCount = concepts.length;
         backToList();
         renderList();
         updateMetrics();
@@ -944,15 +1286,18 @@
     pendingAction = onConfirm;
   }
 
-  // ====== CONFIG MODAL ======
+  // ====== CONFIG ======
   function showConfig() {
     $('cfg-list-url').value = config.listUrl || '';
     $('cfg-publish-url').value = config.publishUrl || '';
+    $('cfg-pin').value = config.pin || '';
     $('config-modal').hidden = false;
   }
   function saveConfig() {
     config.listUrl = $('cfg-list-url').value.trim();
     config.publishUrl = $('cfg-publish-url').value.trim();
+    var pin = $('cfg-pin').value.trim();
+    config.pin = pin.length >= 4 ? pin : '';
     localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
     $('config-modal').hidden = true;
     fetchConcepts();
@@ -971,8 +1316,19 @@
     setTimeout(function() { t.remove(); }, 3500);
   }
 
+  // ====== DETAIL EVENT BINDINGS ======
+  function onDetailInput() {
+    updatePreview();
+    updateSeoCounters();
+    updateSlugPreview();
+    updateEditorStats();
+    updateKeyphraseChecks();
+    checkDuplicates();
+  }
+
   // ====== EVENT BINDINGS ======
-  $('refresh-btn').addEventListener('click', fetchConcepts);
+  $('refresh-btn').addEventListener('click', function() { fetchConcepts(); });
+  $('theme-btn').addEventListener('click', toggleTheme);
   $('config-btn').addEventListener('click', showConfig);
   $('cfg-save').addEventListener('click', saveConfig);
   $('cfg-cancel').addEventListener('click', function() { $('config-modal').hidden = true; });
@@ -983,8 +1339,12 @@
   $('add-faq-btn').addEventListener('click', function() {
     $('faqs-container').appendChild(buildFaqItem('', '', 0));
   });
-  $('html-editor').addEventListener('input', updatePreview);
-  $('f-titel').addEventListener('input', updatePreview);
+
+  $('html-editor').addEventListener('input', onDetailInput);
+  $('f-titel').addEventListener('input', onDetailInput);
+  $('f-seo-title').addEventListener('input', onDetailInput);
+  $('f-slug').addEventListener('input', onDetailInput);
+  $('f-samenvatting').addEventListener('input', onDetailInput);
 
   $('feedback-cancel').addEventListener('click', function() {
     $('feedback-modal').hidden = true;
@@ -1001,8 +1361,11 @@
   });
 
   // ====== INIT ======
+  initTheme();
+  checkPin();
   updateMetrics();
   renderHistory();
+  startAutoRefresh();
   if (!config.listUrl) {
     showConfig();
   } else {
